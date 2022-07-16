@@ -15,6 +15,7 @@ variables:
   containerRegistry: 'stensmyregistry20220715multi.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
+  azureSubscription: 'eb51b472-472e-428b-9b8e-fb8c326e375a'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
