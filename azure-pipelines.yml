@@ -15,7 +15,8 @@ variables:
   containerRegistry: 'stensmyregistry20220715multi.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
-  azureSubscription: 'eb51b472-472e-428b-9b8e-fb8c326e375a'
+  # azureSubscription: 'eb51b472-472e-428b-9b8e-fb8c326e375a'
+  azureSubscription: 'stensserviceconnectionrmstens20220716cicd'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -44,7 +45,8 @@ stages:
       displayName: 'Azure Web App on Container Deploy'
       inputs:
         # azureSubscription: $(azureSubscription)
-        azureSubscription: $(dockerRegistryServiceConnection)
+        # azureSubscription: $(dockerRegistryServiceConnection)
+        azureSubscription: $(azureSubscription)
         appName: $(appName)
         imageName: $(containerRegistry)/$(imageRepository):$(tag)
 
@@ -52,8 +54,8 @@ stages:
         
     - task: AzureWebAppContainer@1
       inputs:
-        # azureSubscription: $(azureSubscription)
-        azureSubscription: $(dockerRegistryServiceConnection)
+        # azureSubscription: $(dockerRegistryServiceConnection)
+        azureSubscription: $(azureSubscription)
         appName: $(appName)
         imageName: $(containerRegistry)/$(imageRepository):$(tag)
         deployToSlotOrASE: true
@@ -62,8 +64,8 @@ stages:
 
     - task: AzureAppServiceManage@0
       inputs:
-        # azureSubscription: $(azureSubscription)
-        azureSubscription: $(dockerRegistryServiceConnection)
+        # azureSubscription: $(dockerRegistryServiceConnection)
+        azureSubscription: $(azureSubscription)
         WebAppName: $(appName)
         ResourceGroupName: 'stens20220716cicd-rg'
         SourceSlot: staging
