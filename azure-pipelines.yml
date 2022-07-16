@@ -43,7 +43,8 @@ stages:
     - task: AzureWebAppContainer@1
       displayName: 'Azure Web App on Container Deploy'
       inputs:
-        azureSubscription: $(azureSubscription)
+        # azureSubscription: $(azureSubscription)
+        azureSubscription: $(dockerRegistryServiceConnection)
         appName: $(appName)
         imageName: $(containerRegistry)/$(imageRepository):$(tag)
 
@@ -51,7 +52,8 @@ stages:
         
     - task: AzureWebAppContainer@1
       inputs:
-        azureSubscription: $(azureSubscription)
+        # azureSubscription: $(azureSubscription)
+        azureSubscription: $(dockerRegistryServiceConnection)
         appName: $(appName)
         imageName: $(containerRegistry)/$(imageRepository):$(tag)
         deployToSlotOrASE: true
@@ -60,7 +62,8 @@ stages:
 
     - task: AzureAppServiceManage@0
       inputs:
-        azureSubscription: $(azureSubscription)
+        # azureSubscription: $(azureSubscription)
+        azureSubscription: $(dockerRegistryServiceConnection)
         WebAppName: $(appName)
         ResourceGroupName: 'stens20220716cicd-rg'
         SourceSlot: staging
