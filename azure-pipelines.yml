@@ -17,6 +17,7 @@ variables:
   tag: '$(Build.BuildId)'
   # azureSubscription: 'eb51b472-472e-428b-9b8e-fb8c326e375a'
   azureSubscription: 'stensserviceconnectionrmstens20220716cicd'
+  appName: 'stenswebappstens20220716cicd'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
