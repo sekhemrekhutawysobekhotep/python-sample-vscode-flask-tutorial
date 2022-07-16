@@ -1,0 +1,68 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '41f8a51e-bf6c-4524-bd09-45ead53df3a3'
+  imageRepository: 'sekhemrekhutawysobekhoteppythonsamplevscodeflasktu'
+  containerRegistry: 'stensmyregistry20220715multi.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+
+    - task: AzureWebAppContainer@1
+      displayName: 'Azure Web App on Container Deploy'
+      inputs:
+        azureSubscription: $(azureSubscription)
+        appName: $(appName)
+        imageName: $(containerRegistry)/$(imageRepository):$(tag)
+
+
+        
+    - task: AzureWebAppContainer@1
+      inputs:
+        azureSubscription: $(azureSubscription)
+        appName: $(appName)
+        imageName: $(containerRegistry)/$(imageRepository):$(tag)
+        deployToSlotOrASE: true
+        resourceGroupName: 'stens20220716cicd-rg'
+        slotName: staging
+
+    - task: AzureAppServiceManage@0
+      inputs:
+        azureSubscription: $(azureSubscription)
+        WebAppName: $(appName)
+        ResourceGroupName: 'stens20220716cicd-rg'
+        SourceSlot: staging
+        SwapWithProduction: true
+
+
